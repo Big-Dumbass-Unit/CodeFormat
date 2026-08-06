@@ -7,15 +7,16 @@ public static class Program
     public static int Main(string[] args)
     {
         bool help = false;
+
         List<string> ignoredPaths = new List<string>();
         List<string> pathsToCheck = new List<string>();
-        List<string> current = new List<string>();
+        List<string> current = pathsToCheck;
 
         OptionSet options = new OptionSet()
         {
             { "i=|ignore=", "Specifies the folder(s) to ignore when checking the formats.", v => { ignoredPaths.Add(v); current = ignoredPaths; } },
             { "h|help|?", "Shows this message.", v => help = v != null },
-            { "p=|path=", "Specifies the path(s) to format check.", v => { ignoredPaths.Add(v); current = ignoredPaths; } },
+            { "p=|path=", "Specifies the path(s) to format check.", v => { pathsToCheck.Add(v); current = pathsToCheck; } },
             { "<>", v => current.Add(v) }
         };
         options.Parse(args);
