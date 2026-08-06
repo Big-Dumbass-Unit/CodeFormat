@@ -8,12 +8,31 @@ public static class Program
     {
         bool help = false;
         List<string> ignoredPaths = new List<string>();
+        List<string> pathsToCheck = new List<string>();
+        List<string> current = new List<string>();
 
         OptionSet options = new OptionSet()
         {
-            { "i|ignore=", "Specifies a folder name to ignore when checking the formats.", ignoredPaths.Add },
-            { "h|help|?", "Shows this message.", v => help = v != null }
+            { "i=|ignore=", "Specifies the folder(s) to ignore when checking the formats.", v => { ignoredPaths.Add(v); current = ignoredPaths; } },
+            { "h|help|?", "Shows this message.", v => help = v != null },
+            { "p=|path=", "Specifies the path(s) to format check.", v => { ignoredPaths.Add(v); current = ignoredPaths; } },
+            { "<>", v => current.Add(v) }
         };
+        options.Parse(args);
+
+        Console.WriteLine("Ignored:");
+
+        foreach (string ignored in ignoredPaths)
+        {
+            Console.WriteLine(ignored);
+        }
+
+        Console.WriteLine("\nIncluded:");
+        
+        foreach (string included in pathsToCheck)
+        {
+            Console.WriteLine(included);
+        }
 
         if (help)
         {
@@ -24,19 +43,7 @@ public static class Program
             return 0;
         }
 
-        List<string> extra = options.Parse(args);
-        string path = string.Empty;
 
-        if (extra.Count > 0)
-        {
-            path = string.Join(" ", extra.ToArray());
-        }
-        else
-        {
-            throw new ArgumentException("No path(s) specified.");
-        }
-        
-        
         
         return 0;
     }
