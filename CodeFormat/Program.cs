@@ -8,7 +8,7 @@ namespace BDU.Tools.CodeFormat;
 
 public static class Program
 {
-    private static readonly string[] unityMessages = File.ReadAllLines("UnityMessages.txt");
+    private static readonly string[] unityMessages = File.ReadAllLines(Path.Combine(AppContext.BaseDirectory, "UnityMessages.txt"));
 
     private static readonly string[] rankNames =
     {
@@ -49,8 +49,21 @@ public static class Program
             return 0;
         }
 
+        if (pathsToCheck.Count == 0)
+        {
+            pathsToCheck.Add(".");
+        }
+
         foreach (string path in pathsToCheck)
         {
+            if (!Directory.Exists(path))
+            {
+                Console.WriteLine(onCI
+                    ? $"::error::Path '{path}' does not exist."
+                    : $"error: path '{path}' does not exist.");
+                return 2;
+            }
+
             foreach (string file in Directory.EnumerateFiles(path, "*.cs", SearchOption.AllDirectories))
             {
                 string relative = Path.GetRelativePath(path, file);
@@ -143,6 +156,13 @@ public static class Program
     private static void Report(string file, SyntaxNode node, string message)
     {
         int line = node.GetLocation().GetLineSpan().StartLinePosition.Line + 1;
+
+        string display = file.Replace('\\', '/');
+
+        if (display.StartsWith("./"))
+        {
+            display = display[2..];
+        }
 
         Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine(onCI
