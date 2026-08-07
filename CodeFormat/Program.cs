@@ -12,10 +12,10 @@ public static class Program
 
     private static readonly string[] rankNames =
     {
-        "event / event field", "delegate", "readonly field / property", "public field / property",
-        "protected field / property", "private field / property", "other field / property",
-        "constructor", "Unity message", "public method", "protected method", "private method",
-        "other method", "nested type"
+        "event / event field", "delegate", "constant field / property", "readonly field / property",
+        "public field / property", "protected field / property", "private field / property",
+        "other field / property", "constructor", "Unity message", "public method", "protected method",
+        "private method", "other method", "nested type"
     };
 
     private static int violations = 0;
@@ -179,19 +179,20 @@ public static class Program
         {
             EventDeclarationSyntax or EventFieldDeclarationSyntax => 0,
             DelegateDeclarationSyntax => 1,
-            FieldDeclarationSyntax or PropertyDeclarationSyntax when member.Modifiers.Any(SyntaxKind.ReadOnlyKeyword) => 2,
-            FieldDeclarationSyntax or PropertyDeclarationSyntax when member.Modifiers.Any(SyntaxKind.PublicKeyword) => 3,
-            FieldDeclarationSyntax or PropertyDeclarationSyntax when member.Modifiers.Any(SyntaxKind.ProtectedKeyword) => 4,
-            FieldDeclarationSyntax or PropertyDeclarationSyntax when member.Modifiers.Any(SyntaxKind.PrivateKeyword) => 5,
-            FieldDeclarationSyntax or PropertyDeclarationSyntax => 6,
-            ConstructorDeclarationSyntax => 7,
-            MethodDeclarationSyntax m when IsUnityMessage(m.Identifier.Text) => 8,
-            MethodDeclarationSyntax m when m.Modifiers.Any(SyntaxKind.PublicKeyword) => 9,
-            MethodDeclarationSyntax m when m.Modifiers.Any(SyntaxKind.ProtectedKeyword) => 10,
-            MethodDeclarationSyntax m when m.Modifiers.Any(SyntaxKind.PrivateKeyword) => 11,
-            MethodDeclarationSyntax or OperatorDeclarationSyntax => 12,
-            BaseTypeDeclarationSyntax => 13,
-            _ => 0
+            FieldDeclarationSyntax or PropertyDeclarationSyntax when member.Modifiers.Any(SyntaxKind.ConstKeyword) => 2,
+            FieldDeclarationSyntax or PropertyDeclarationSyntax when member.Modifiers.Any(SyntaxKind.ReadOnlyKeyword) => 3,
+            FieldDeclarationSyntax or PropertyDeclarationSyntax when member.Modifiers.Any(SyntaxKind.PublicKeyword) => 4,
+            FieldDeclarationSyntax or PropertyDeclarationSyntax when member.Modifiers.Any(SyntaxKind.ProtectedKeyword) => 5,
+            FieldDeclarationSyntax or PropertyDeclarationSyntax when member.Modifiers.Any(SyntaxKind.PrivateKeyword) => 6,
+            FieldDeclarationSyntax or PropertyDeclarationSyntax => 7,
+            ConstructorDeclarationSyntax => 8,
+            MethodDeclarationSyntax method when IsUnityMessage(method.Identifier.Text) => 9,
+            MethodDeclarationSyntax method when method.Modifiers.Any(SyntaxKind.PublicKeyword) => 10,
+            MethodDeclarationSyntax method when method.Modifiers.Any(SyntaxKind.ProtectedKeyword) => 11,
+            MethodDeclarationSyntax method when method.Modifiers.Any(SyntaxKind.PrivateKeyword) => 12,
+            MethodDeclarationSyntax or OperatorDeclarationSyntax or ConversionOperatorDeclarationSyntax => 13,
+            BaseTypeDeclarationSyntax => 14,
+            _ => -1
         };
     }
 
