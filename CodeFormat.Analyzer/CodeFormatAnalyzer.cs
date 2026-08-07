@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 
 using BDU.Tools.CodeFormat.Rules;
 
@@ -15,6 +16,8 @@ namespace CodeFormat.Analyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(FormatRules.memberOrder, FormatRules.fieldNaming, FormatRules.constantNaming, FormatRules.eventNaming,
             FormatRules.propertyNaming, FormatRules.methodNaming, FormatRules.typeNaming, FormatRules.interfaceNaming, FormatRules.enumMemberNaming, FormatRules.parameterNaming);
+
+        private static readonly string[] ignoredFolders = { "Plugins", "ThirdParty" };
 
         public override void Initialize(AnalysisContext context)
         {
@@ -41,16 +44,31 @@ namespace CodeFormat.Analyzer
 
         private static void AnalyzeTypeDeclaration(SyntaxNodeAnalysisContext context)
         {
+            if (IsIgnored(context.Node.SyntaxTree))
+            {
+                return;
+            }
+
             Report(context, FormatRules.AnalyzeType((TypeDeclarationSyntax)context.Node));
         }
 
         private static void AnalyzeBaseTypeDeclaration(SyntaxNodeAnalysisContext context)
         {
+            if (IsIgnored(context.Node.SyntaxTree))
+            {
+                return;
+            }
+
             Report(context, FormatRules.AnalyzeBaseType((BaseTypeDeclarationSyntax)context.Node));
         }
 
         private static void AnalyzeParameter(SyntaxNodeAnalysisContext context)
         {
+            if (IsIgnored(context.Node.SyntaxTree))
+            {
+                return;
+            }
+
             Report(context, FormatRules.AnalyzeParameter((ParameterSyntax)context.Node));
         }
 
@@ -60,6 +78,19 @@ namespace CodeFormat.Analyzer
             {
                 context.ReportDiagnostic(diagnostic);
             }
+        }
+
+        private static bool IsIgnored(SyntaxTree tree)
+        {
+            string path = tree.FilePath;
+
+            if (string.IsNullOrEmpty(path))
+            {
+                return false;
+            }
+
+            string[] segments = path.Replace('\\', '/').Split('/');
+            return !segments.Contains("Assets") || segments.Any(ignoredFolders.Contains);
         }
     }
 }
