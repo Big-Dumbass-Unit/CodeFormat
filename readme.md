@@ -9,8 +9,30 @@ There are more launch arguments you can specify, such as `-i` / `--ignore`, spec
 **If you do this, you must then specify the path(s) to the folders you actually want to check by typing `-p` / `--path` after the ignored name(s), then the full path to the directory/directories!**
 
 An example of how it would be run is as follows:
-```
+```bash
 .\CodeFormat.exe -i/--ignore Plugins ThirdParty -p/--path "C:\Directory\To\Check" "C:\Other\Directory\To\Check"
+```
+
+## Installation - Github Action
+To use this as a Github action you can specify a workflow (e.g. `codeformat.yml` in your project's `.github\worfklows\` directory), looking something like the following:
+```yaml
+name: CodeFormat
+on:
+  push:
+  pull_request:
+    types: [opened, reopened, ready_for_review] # To ensure it doesn't get run twice when a commit is made to an existing PR.
+
+jobs:
+  format-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+            lfs: true
+      - uses: big-dumbass-unit/codeformat@action-v1
+        with:
+          path: Assets/Scripts
+          ignore: Plugins ThirdParty
 ```
 
 ## Installation - Analyzers
