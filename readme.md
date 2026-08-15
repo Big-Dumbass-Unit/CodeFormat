@@ -10,7 +10,7 @@ There are more launch arguments you can specify, such as `-i` / `--ignore`, spec
 
 An example of how it would be run is as follows:
 ```
-> CodeFormat.exe -i/--ignore Plugins ThirdParty -p/--path "C:\Directory\To\Check" "C:\Other\Directory\To\Check"
+.\CodeFormat.exe -i/--ignore Plugins ThirdParty -p/--path "C:\Directory\To\Check" "C:\Other\Directory\To\Check"
 ```
 
 ## Installation - Analyzers
