@@ -43,7 +43,7 @@ public static class Program
 
         if (pathsToCheck.Count == 0)
         {
-            pathsToCheck.Add(".");
+            throw new NullReferenceException("No path specified, please specify at least one!");
         }
 
         foreach (string path in pathsToCheck)

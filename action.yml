@@ -1,0 +1,12 @@
+name: 'CodeFormat'
+description: 'Runs CodeFormat across the repository'
+inputs:
+  path:
+    description: 'Space-separated path(s) to check'
+    default: '.'
+  ignore:
+    description: 'Space-separated folder names to skip'
+    default: ''
+runs:
+  using: 'docker'
+  image: 'Dockerfile'

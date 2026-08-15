@@ -1,8 +1,9 @@
-﻿using System;
+﻿#pragma warning disable RS2008
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
