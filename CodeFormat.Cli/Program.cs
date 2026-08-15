@@ -13,7 +13,6 @@ public static class Program
     private static int violations = 0;
 
     private static bool onCI = Environment.GetEnvironmentVariable("GITHUB_ACTIONS") == "true";
-    private static ConsoleColor originalColor = Console.ForegroundColor;
 
     public static int Main(string[] args)
     {
@@ -78,6 +77,8 @@ public static class Program
             }
         }
 
+        ConsoleColor originalColor = Console.ForegroundColor;
+
         Console.ForegroundColor = violations == 0 ? ConsoleColor.Green : ConsoleColor.Red;
         Console.WriteLine(violations == 0
             ? "CodeFormat successfully found no violations."
@@ -97,6 +98,8 @@ public static class Program
             display = display[2..];
         }
 
+        ConsoleColor originalColor = Console.ForegroundColor;
+        
         Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine(onCI
             ? $"::error file={display},line={line}::{diagnostic.GetMessage()}"
