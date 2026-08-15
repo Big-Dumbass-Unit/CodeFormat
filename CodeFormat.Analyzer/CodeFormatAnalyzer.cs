@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace CodeFormat.Analyzer
+namespace BDU.Tools.CodeFormat.Analyzer
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class CodeFormatAnalyzer : DiagnosticAnalyzer
