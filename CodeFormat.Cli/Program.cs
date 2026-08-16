@@ -68,7 +68,10 @@ public static class Program
 
                 IEnumerable<Diagnostic> diagnostics = root.DescendantNodes().OfType<TypeDeclarationSyntax>().SelectMany(FormatRules.AnalyzeType)
                     .Concat(root.DescendantNodes().OfType<BaseTypeDeclarationSyntax>().SelectMany(FormatRules.AnalyzeBaseType))
-                    .Concat(root.DescendantNodes().OfType<ParameterSyntax>().SelectMany(FormatRules.AnalyzeParameter));
+                    .Concat(root.DescendantNodes().OfType<ParameterSyntax>().SelectMany(FormatRules.AnalyzeParameter))
+                    .Concat(root.DescendantNodes()
+                        .Where(node => node is VariableDeclarationSyntax or ForEachStatementSyntax or DeclarationExpressionSyntax or VarPatternSyntax)
+                        .SelectMany(FormatRules.AnalyzeVariableType));
 
                 foreach (Diagnostic diagnostic in diagnostics)
                 {

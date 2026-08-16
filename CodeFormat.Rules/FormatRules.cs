@@ -25,6 +25,7 @@ namespace BDU.Tools.CodeFormat.Rules
         public static readonly DiagnosticDescriptor interfaceNaming = Rule("BDU0008", "Interface naming");
         public static readonly DiagnosticDescriptor enumMemberNaming = Rule("BDU0009", "Enum member naming");
         public static readonly DiagnosticDescriptor parameterNaming = Rule("BDU0010", "Parameter naming");
+        public static readonly DiagnosticDescriptor variableType = Rule("BDU0011", "Variable type");
 
         private static readonly HashSet<string> unityMessages = LoadUnityMessages();
 
@@ -105,6 +106,33 @@ namespace BDU.Tools.CodeFormat.Rules
             if (!IsCamelCase(parameterName))
             {
                 yield return Diagnostic.Create(parameterNaming, parameter.Identifier.GetLocation(), $"parameter '{parameterName}' should be camelCase");
+            }
+        }
+
+        public static IEnumerable<Diagnostic> AnalyzeVariableType(SyntaxNode node)
+        {
+            if (node is VarPatternSyntax pattern)
+            {
+                yield return Diagnostic.Create(variableType, pattern.VarKeyword.GetLocation(), "'var' should be replaced with an explicit type");
+                yield break;
+            }
+
+            TypeSyntax type = node switch
+            {
+                VariableDeclarationSyntax declaration => declaration.Type,
+                ForEachStatementSyntax forEach => forEach.Type,
+                DeclarationExpressionSyntax declaration => declaration.Type,
+                _ => null
+            };
+
+            if (type is RefTypeSyntax reference)
+            {
+                type = reference.Type;
+            }
+
+            if (type != null && type.IsVar)
+            {
+                yield return Diagnostic.Create(variableType, type.GetLocation(), "'var' should be replaced with an explicit type");
             }
         }
 
