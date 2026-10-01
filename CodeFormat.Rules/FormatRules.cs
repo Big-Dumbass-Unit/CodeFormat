@@ -168,7 +168,7 @@ namespace BDU.Tools.CodeFormat.Rules
                     {
                         if (!IsPascalCase(variable.Identifier.Text))
                         {
-                            yield return Diagnostic.Create(eventNaming, variable.Identifier.GetLocation(), $"{type.Identifier}: event '{variable.Identifier.Text}' should be camelCase");
+                            yield return Diagnostic.Create(eventNaming, variable.Identifier.GetLocation(), $"{type.Identifier}: event '{variable.Identifier.Text}' should be PascalCase");
                         }
                     }
                     break;
