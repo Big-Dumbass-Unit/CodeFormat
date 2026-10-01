@@ -166,7 +166,7 @@ namespace BDU.Tools.CodeFormat.Rules
                 case EventFieldDeclarationSyntax eventField:
                     foreach (VariableDeclaratorSyntax variable in eventField.Declaration.Variables)
                     {
-                        if (!IsCamelCase(variable.Identifier.Text))
+                        if (!IsPascalCase(variable.Identifier.Text))
                         {
                             yield return Diagnostic.Create(eventNaming, variable.Identifier.GetLocation(), $"{type.Identifier}: event '{variable.Identifier.Text}' should be camelCase");
                         }
