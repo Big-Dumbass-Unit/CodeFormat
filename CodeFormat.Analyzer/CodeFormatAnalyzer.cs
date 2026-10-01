@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -30,6 +31,7 @@ namespace BDU.Tools.CodeFormat.Analyzer
         ];
 
         private static readonly string[] ignoredFolders = { "Plugins", "ThirdParty" };
+        private static readonly string[] packageFolders = { "PackageCache", "Packages" };
 
         public override void Initialize(AnalysisContext context)
         {
@@ -118,7 +120,31 @@ namespace BDU.Tools.CodeFormat.Analyzer
             }
 
             string[] segments = path.Replace('\\', '/').Split('/');
-            return !segments.Contains("Assets") || segments.Any(ignoredFolders.Contains);
+
+            int assetsIndex = Array.IndexOf(segments, "Assets");
+
+            if (assetsIndex < 0)
+            {
+                return true;
+            }
+
+            for (int i = 0; i < assetsIndex; i++)
+            {
+                if (packageFolders.Contains(segments[i]))
+                {
+                    return true;
+                }
+            }
+
+            for (int i = assetsIndex + 1; i < segments.Length; i++)
+            {
+                if (ignoredFolders.Contains(segments[i]))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }
