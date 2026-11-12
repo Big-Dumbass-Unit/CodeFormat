@@ -15,6 +15,9 @@ namespace BDU.Tools.CodeFormat.Analyzer
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class CodeFormatAnalyzer : DiagnosticAnalyzer
     {
+        private static readonly string[] ignoredFolders = { "Plugins", "ThirdParty" };
+        private static readonly string[] packageFolders = { "PackageCache", "Packages" };
+
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         [
             FormatRules.memberOrder,
@@ -29,9 +32,6 @@ namespace BDU.Tools.CodeFormat.Analyzer
             FormatRules.parameterNaming,
             FormatRules.variableType
         ];
-
-        private static readonly string[] ignoredFolders = { "Plugins", "ThirdParty" };
-        private static readonly string[] packageFolders = { "PackageCache", "Packages" };
 
         public override void Initialize(AnalysisContext context)
         {
