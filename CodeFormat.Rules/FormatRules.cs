@@ -36,7 +36,9 @@ namespace BDU.Tools.CodeFormat.Rules
             "public readonly field / property", "protected readonly field / property",
             "private readonly field / property", "readonly field / property", "public field / property", 
             "protected field / property", "private field / property", "other field / property", 
-            "constructor", "Unity message", "public method", "protected method", 
+            "constructor", "Unity message", 
+            "public abstract method", "public override method", "pulic virtual method", "public method",
+            "protected abstract method", "protected override method", "protected virtual method", "protected method", 
             "private method", "other method", "nested type"
         };
 
@@ -211,12 +213,21 @@ namespace BDU.Tools.CodeFormat.Rules
                 ConstructorDeclarationSyntax => 14,
                 
                 MethodDeclarationSyntax method when IsUnityMessage(method.Identifier.Text) => 15,
-                MethodDeclarationSyntax method when method.Modifiers.Any(SyntaxKind.PublicKeyword) => 16,
-                MethodDeclarationSyntax method when method.Modifiers.Any(SyntaxKind.ProtectedKeyword) => 17,
-                MethodDeclarationSyntax method when method.Modifiers.Any(SyntaxKind.PrivateKeyword) => 18,
+
+                MethodDeclarationSyntax method when method.Modifiers.Any(SyntaxKind.AbstractKeyword) && method.Modifiers.Any(SyntaxKind.PublicKeyword) => 16,
+                MethodDeclarationSyntax method when method.Modifiers.Any(SyntaxKind.OverrideKeyword) && method.Modifiers.Any(SyntaxKind.PublicKeyword) => 17,
+                MethodDeclarationSyntax method when method.Modifiers.Any(SyntaxKind.VirtualKeyword) && method.Modifiers.Any(SyntaxKind.PublicKeyword) => 18,
+                MethodDeclarationSyntax method when method.Modifiers.Any(SyntaxKind.PublicKeyword) => 19,
+
+                MethodDeclarationSyntax method when method.Modifiers.Any(SyntaxKind.AbstractKeyword) && method.Modifiers.Any(SyntaxKind.ProtectedKeyword) => 20,
+                MethodDeclarationSyntax method when method.Modifiers.Any(SyntaxKind.OverrideKeyword) && method.Modifiers.Any(SyntaxKind.ProtectedKeyword) => 21,
+                MethodDeclarationSyntax method when method.Modifiers.Any(SyntaxKind.VirtualKeyword) && method.Modifiers.Any(SyntaxKind.ProtectedKeyword) => 22,
+                MethodDeclarationSyntax method when method.Modifiers.Any(SyntaxKind.ProtectedKeyword) => 23,
+
+                MethodDeclarationSyntax method when method.Modifiers.Any(SyntaxKind.PrivateKeyword) => 24,
                 
-                MethodDeclarationSyntax or OperatorDeclarationSyntax or ConversionOperatorDeclarationSyntax => 19,
-                BaseTypeDeclarationSyntax => 20,
+                MethodDeclarationSyntax or OperatorDeclarationSyntax or ConversionOperatorDeclarationSyntax => 25,
+                BaseTypeDeclarationSyntax => 26,
                 _ => -1
             };
         }
