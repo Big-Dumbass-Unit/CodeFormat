@@ -13,7 +13,7 @@ namespace BDU.Tools.CodeFormat.Rules
 {
     public static class FormatRules
     {
-        private const string ResourceName = "CodeFormat.Rules.UnityMessages.txt";
+        private const string UnityMessagesResource = "CodeFormat.Rules.UnityMessages.txt";
 
         public static readonly DiagnosticDescriptor memberOrder = Rule("BDU0001", "Member ordering");
         public static readonly DiagnosticDescriptor fieldNaming = Rule("BDU0002", "Field naming");
@@ -259,11 +259,11 @@ namespace BDU.Tools.CodeFormat.Rules
 
         private static HashSet<string> LoadUnityMessages()
         {
-            using (Stream stream = typeof(FormatRules).Assembly.GetManifestResourceStream(ResourceName))
+            using (Stream stream = typeof(FormatRules).Assembly.GetManifestResourceStream(UnityMessagesResource))
             {
                 if (stream == null)
                 {
-                    throw new InvalidOperationException($"Embedded resource '{ResourceName}' not found. Available: {string.Join(", ", typeof(FormatRules).Assembly.GetManifestResourceNames())}");
+                    throw new InvalidOperationException($"Embedded resource '{UnityMessagesResource}' not found. Available: {string.Join(", ", typeof(FormatRules).Assembly.GetManifestResourceNames())}");
                 }
 
                 using (StreamReader reader = new StreamReader(stream))
